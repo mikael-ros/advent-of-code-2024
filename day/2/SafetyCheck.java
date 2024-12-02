@@ -7,6 +7,8 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class SafetyCheck {
+    private static int upperThreshold = 3;
+    private static int lowerThreshold = 1;
     public static void main(String[] args) {
         if (args.length > 0)
             System.out.println(CountSafes(Read(args[0])));
@@ -18,9 +20,9 @@ public class SafetyCheck {
         Set<List<Integer>> lists = new HashSet<>();
         
         try (Scanner inputScanner = new Scanner(new File(filePath))) {
-            while (inputScanner.hasNext()) {
+            while (inputScanner.hasNextLine()) {
                 List<Integer> row = new ArrayList<>();
-                for (String number : inputScanner.next().split(" "))
+                for (String number : inputScanner.nextLine().split(" "))
                     row.add(Integer.valueOf(number));
                 lists.add(row);
             }
@@ -35,17 +37,23 @@ public class SafetyCheck {
     }
 
     public static boolean AnalyzeList(List<Integer> list) {
-        return list.size() <= 1 ? true : AnalyzeListHelper(list, 0, list.size() - 1, list.getFirst() > list.getLast());
+        if (list.size() <= 1) 
+            return true;
+        else {
+            float sign = Math.signum(list.getFirst() - list.getLast());
+            return sign != 0 ? AnalyzeListHelper(list, sign, 1) : false;
+        }
     }
 
-    public static boolean AnalyzeListHelper(List<Integer> list, int currHeadIndex, int currTailIndex, boolean trend){
-        if (currTailIndex != Math.round(list.size()/2)) {
-            return list.get(currHeadIndex) > list.get(currTailIndex) == trend
-                ? AnalyzeListHelper(list, currHeadIndex+1, currTailIndex-1, trend)
-                : false;
-        } else {
+    public static boolean AnalyzeListHelper(List<Integer> list, float trend, int currentIndex){
+        if (currentIndex < list.size()) {
+            int diff = list.get(currentIndex - 1) - list.get(currentIndex);
+            if (Math.signum(diff) == trend && Math.abs(diff) <= upperThreshold && Math.abs(diff) >= lowerThreshold)
+                return AnalyzeListHelper(list, trend, currentIndex + 1);
+            else 
+                return false;
+        } else 
             return true;
-        }
     }
 
 }
