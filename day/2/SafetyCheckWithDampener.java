@@ -46,13 +46,16 @@ public class SafetyCheckWithDampener {
     }
 
     public static boolean AnalyzeListHelper(List<Integer> list, float trend, int currentIndex, boolean dampened){
-        if (currentIndex < list.size() - 1) {
+        if (currentIndex < list.size() - 2) {
             int diff = list.get(currentIndex) - list.get(currentIndex + 1);
             if (Math.signum(diff) == trend && Math.abs(diff) <= upperThreshold && Math.abs(diff) >= lowerThreshold)
                 return AnalyzeListHelper(list, trend, currentIndex + 1, dampened);
             else if (!dampened) {
-                list.remove(currentIndex + 1);
-                return AnalyzeListHelper(list, trend, currentIndex, true);
+                if (Math.signum(list.getFirst() - list.get(currentIndex + 1)) != trend) {
+                    list.remove(currentIndex + 1);
+                    return AnalyzeListHelper(list, trend, currentIndex, true);
+                } else
+                    return false;
             } else 
                 return false;
         } else 

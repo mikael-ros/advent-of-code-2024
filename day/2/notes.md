@@ -8,6 +8,7 @@
 3. Map the processing function over the lists and count the amount of safe verdicts (true)
 
 ## Part 2
-This should be as simple as just having some boolean ``dampened`` passed through the recursive part, that turns false on the first failure.
+### Solution idea 1
+This should be as simple as just having some boolean ``dampened`` passed through the recursive part, that turns true on the first failure.
 
-By allowing the dampened to be set as false, we can still let the program behave as prior and thus won't need to create a new class or method, but I will be creating a new file simply to make it easier to see which version is for which part.
+By allowing the dampened to be set as true to begin with, we can still let the program behave as prior and thus won't need to create a new class or method, but I will be creating a new file simply to make it easier to see which version is for which part.
