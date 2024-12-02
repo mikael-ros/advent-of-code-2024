@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-public class SafetyCheck {
+public class SafetyCheckWithDampener {
     private static int upperThreshold = 3;
     private static int lowerThreshold = 1;
     public static void main(String[] args) {
@@ -42,16 +41,18 @@ public class SafetyCheck {
             return true;
         else {
             float sign = Math.signum(list.getFirst() - list.getLast());
-            return sign != 0 ? AnalyzeListHelper(list, sign, 1) : false;
+            return sign != 0 ? AnalyzeListHelper(list, sign, 0, false) : false; 
         }
     }
 
-    public static boolean AnalyzeListHelper(List<Integer> list, float trend, int currentIndex){
-        if (currentIndex < list.size()) {
-            int diff = list.get(currentIndex - 1) - list.get(currentIndex);
+    public static boolean AnalyzeListHelper(List<Integer> list, float trend, int currentIndex, boolean dampened){
+        if (currentIndex < list.size() - 1) {
+            int diff = list.get(currentIndex) - list.get(currentIndex + 1);
             if (Math.signum(diff) == trend && Math.abs(diff) <= upperThreshold && Math.abs(diff) >= lowerThreshold)
-                return AnalyzeListHelper(list, trend, currentIndex + 1);
-            else 
+                return AnalyzeListHelper(list, trend, currentIndex + 1, dampened);
+            else if (!dampened) {
+                return AnalyzeListHelper(list, trend, currentIndex + 2, true);
+            } else 
                 return false;
         } else 
             return true;
