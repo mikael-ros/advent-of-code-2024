@@ -1,7 +1,7 @@
 # Day 2 notes
 ## Part 1
 ### Solution idea 1
-1. Read data into an array of lists. We can read the number of lines, but cannot assume the length of each list
+1. Read data into a set of lists. We do not know how many rows or columns there are (I mean we do, but thats assuming input is always 1000 lines still)
 2. Lists are analyzed through the following process:
     a. Remove the head and the tail, compare them to get the "trend"
     b. Recursively pass this list, along with the identified trend and prior head and tail
@@ -13,8 +13,7 @@
 procedure SafetyCheck:
     begin
         input = read file
-        n = read amount of lines in input
-        lists = new list array of size n
+        lists = new list set
         
         for each line i in input do:
             begin
@@ -54,7 +53,7 @@ function AnalyzeListHelper(list, currHead, currTail, trend):
                     end
                 else
                     begin
-                        return AnalyzeListHelper(list, currHead+1, currTail-1);
+                        return AnalyzeListHelper(list, currHead+1, currTail-1, trend);
                     end
             end
         else
