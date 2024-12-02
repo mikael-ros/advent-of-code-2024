@@ -33,7 +33,7 @@ public class SafetyCheckWithDampener {
     }
 
     public static int CountSafes(Set<List<Integer>> lists) {
-        return lists.stream().map(list -> AnalyzeList(list)).mapToInt(res -> res ? 1 : 0).sum();
+        return (int) lists.stream().map(list -> AnalyzeList(list)).filter(Boolean::booleanValue).count();
     }
 
     public static boolean AnalyzeList(List<Integer> list) {
@@ -51,7 +51,8 @@ public class SafetyCheckWithDampener {
             if (Math.signum(diff) == trend && Math.abs(diff) <= upperThreshold && Math.abs(diff) >= lowerThreshold)
                 return AnalyzeListHelper(list, trend, currentIndex + 1, dampened);
             else if (!dampened) {
-                return AnalyzeListHelper(list, trend, currentIndex + 2, true);
+                list.remove(currentIndex + 1);
+                return AnalyzeListHelper(list, trend, currentIndex, true);
             } else 
                 return false;
         } else 
